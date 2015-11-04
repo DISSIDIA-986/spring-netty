@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+
+	<sql id="sql_select">
+		select *
+	</sql>	
+<!-- ChatLogin -->
+	<resultMap type="com.dissidia986.model.ChatLogin" id="chatLoginMap">
+		<result property="id" column="id" />
+		<result property="loginid" column="loginid" />
+		<result property="username" column="username" />
+		<result property="address" column="address" />
+		<result property="createtime" column="createtime" />
+	</resultMap>
+		
+	<!-- ChatLogin -->
+	<sql id="sql_chatLogin_where">
+		from t_chatlogin
+		<where>
+			1 = 1
+			<if test="id != null">
+				id =#{id}
+			</if>
+			<if test="loginid != null">
+				loginid =#{loginid}
+			</if>
+			<if test="username != null">
+				`username` =#{username}
+			</if>
+			<if test="address != null">
+				address like
+				CONCAT('%',#{address},'%')
+			</if>
+			<if test="_starttime != null">
+					<![CDATA[
+						createtime >= #{_starttime}
+					]]>
+			</if>
+			<if test="_endtime != null">
+					<![CDATA[
+						createtime < #{_endtime}
+					]]>
+			</if>
+		</where>
+		<if test="_start != null and _size != null">
+			limit #_start#, #_size#
+		</if>
+	</sql>
+	<select id="findChatLoginByParams" parameterType="map"
+		resultMap="chatLoginMap">
+		<include refid="sql_select" />
+		<include refid="sql_chatLogin_where" />
+	</select>
+	<insert id="insertChatLogin" parameterType="chatLogin">
+		insert into t_chatlogin(
+		loginid,
+		`username`,
+		address,
+		createtime
+		) values 
+		(
+		#{loginid},
+		#{username},
+		#{address},
+		now()
+		)
+		<selectKey keyProperty="id" resultType="int">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	<update id="updateChatLogin" parameterType="map">
+		update
+		t_chatlogin set `username`=#{username},createtime=now() where
+		loginid=#{loginid}
+	</update>
+
+</mapper>
+
