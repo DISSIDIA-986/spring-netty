@@ -5,3 +5,7 @@ spring netty集成的websocket聊天demo
 
 
 打开多个窗口并登录，然后发送消息即可看到多人聊天效果。
+
+
+netty的介绍可见我的CSDN
+http://blog.csdn.net/u013695144/article/details/47359881
